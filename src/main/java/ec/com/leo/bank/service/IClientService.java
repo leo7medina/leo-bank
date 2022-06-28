@@ -1,18 +1,19 @@
 package ec.com.leo.bank.service;
 
-import ec.com.leo.bank.model.Client;
+import ec.com.leo.bank.model.ClientEntity;
+import ec.com.leo.bank.vo.ClientVO;
 
 import java.util.List;
 
 public interface IClientService {
 
-    List<Client> findClients();
+    List<ClientEntity> findClients();
 
-    Client findClientById(Integer id);
+    ClientVO findClientById(Integer id);
 
-    Client saveClient(Client clientEntity);
+    ClientVO saveClient(ClientVO client);
 
-    void updateClient(Client clientEntity);
+    void updateClient(ClientVO client);
 
     void deleteClient(Integer id);
 

@@ -3,14 +3,21 @@ package ec.com.leo.bank.model;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Column;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import java.io.Serializable;
 import java.util.Date;
 
 @Getter
 @Setter
 @Entity(name = "MOVIMIENTO")
-public class Movements implements Serializable {
+public class MovementEntity implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -20,7 +27,7 @@ public class Movements implements Serializable {
     @Column(name = "FECHA")
     private Date date;
 
-    @Column(name = "TIPOMOVIMIENTO", length = 45)
+    @Column(name = "TIPOMOVIMIENTO", length = 30)
     private String typeMovement;
 
     @Column(name = "VALOR")
@@ -34,5 +41,5 @@ public class Movements implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "IDCUENTA", referencedColumnName = "IDCUENTA", insertable = false, updatable = false)
-    private Account accountEntity;
+    private AccountEntity accountEntity;
 }

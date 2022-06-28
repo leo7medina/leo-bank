@@ -1,5 +1,6 @@
 package ec.com.leo.bank.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,7 +15,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity(name = "CLIENTE")
-public class Client implements Serializable {
+public class ClientEntity implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -24,7 +25,7 @@ public class Client implements Serializable {
     @Column(name = "PASSWORD", length = 45)
     private String password;
 
-    @Column(name = "ESTADO")
+    @Column(name = "STATUS")
     private Boolean status;
 
     @Column(name = "IDPERSONA")
@@ -32,8 +33,9 @@ public class Client implements Serializable {
 
     @OneToOne
     @JoinColumn(name = "IDPERSONA", referencedColumnName = "IDPERSONA", insertable = false, updatable = false)
-    private Person personEntity;
+    @JsonManagedReference
+    private PersonEntity personEntity;
 
     @OneToMany(mappedBy = "clientEntity")
-    private List<Account> accountCol;
+    private List<AccountEntity> accountCol;
 }

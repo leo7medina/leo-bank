@@ -1,8 +1,7 @@
 package ec.com.leo.bank.controller;
 
 import ec.com.leo.bank.common.LeoBankUtil;
-import ec.com.leo.bank.model.Account;
-import ec.com.leo.bank.model.Client;
+import ec.com.leo.bank.model.AccountEntity;
 import ec.com.leo.bank.service.IAccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -25,7 +24,7 @@ public class AccountController {
 
     @GetMapping("/client/{idClient}")
     public ResponseEntity<?> findAccountByClient(@PathVariable Integer idClient) {
-        List<Account> listAccount;
+        List<AccountEntity> listAccount;
         Map<String, Object> response = new HashMap<>();
         try{
             listAccount = accountService.findByClient(idClient);
@@ -38,8 +37,8 @@ public class AccountController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<?> create(@Validated @RequestBody Account account, BindingResult result) {
-        Account accountNew = null;
+    public ResponseEntity<?> create(@Validated @RequestBody AccountEntity account, BindingResult result) {
+        AccountEntity accountNew = null;
         Map<String, Object> response = new HashMap<>();
         LeoBankUtil.checkErrors(result, response);
         try {
@@ -55,9 +54,9 @@ public class AccountController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(@Validated @RequestBody Account account, BindingResult result, @PathVariable Integer id) {
-        Account accountCurrent = accountService.findAccount(id);
-        Account accountUpdate = null;
+    public ResponseEntity<?> update(@Validated @RequestBody AccountEntity account, BindingResult result, @PathVariable Integer id) {
+        AccountEntity accountCurrent = accountService.findAccount(id);
+        AccountEntity accountUpdate = null;
         Map<String,Object> response = new HashMap<>();
         LeoBankUtil.checkErrors(result, response);
         if(accountCurrent == null) {

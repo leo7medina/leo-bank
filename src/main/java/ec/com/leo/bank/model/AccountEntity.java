@@ -5,12 +5,13 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.List;
 
 @Getter
 @Setter
 @Entity(name = "CUENTA")
-public class Account implements Serializable {
+public class AccountEntity implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -24,7 +25,7 @@ public class Account implements Serializable {
     private String typeAccount;
 
     @Column(name = "SALDOINICIAL")
-    private Double balanceInitial;
+    private BigDecimal balanceInitial;
 
     @Column(name = "ESTADO")
     private Boolean status;
@@ -34,9 +35,9 @@ public class Account implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "IDCLIENTE", referencedColumnName = "IDCLIENTE", insertable = false, updatable = false)
-    private Client clientEntity;
+    private ClientEntity clientEntity;
 
     @OneToMany(mappedBy = "accountEntity")
-    private List<Movements> movementsCol;
+    private List<MovementEntity> movementsCol;
 
 }

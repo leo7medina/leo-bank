@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- * ClientVO.
+ * PersonVO.
  * @author leonardo
  */
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
@@ -15,8 +15,12 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class ClientVO extends PersonVO{
-    private Integer idClient;
-    private String password;
-    private Boolean status;
+public class PersonVO {
+    private Integer idPerson;
+    private String name;
+    private String gender;
+    private Integer age;
+    private String identification;
+    private String address;
+    private String phone;
 }

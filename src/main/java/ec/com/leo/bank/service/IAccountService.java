@@ -1,18 +1,18 @@
 package ec.com.leo.bank.service;
 
-import ec.com.leo.bank.model.Account;
+import ec.com.leo.bank.model.AccountEntity;
 
 import java.util.List;
 
 public interface IAccountService {
 
-    List<Account> findByClient(Integer idClient);
+    List<AccountEntity> findByClient(Integer idClient);
 
-    Account findAccount(Integer id);
+    AccountEntity findAccount(Integer id);
 
-    Account savaAccount(Account entity);
+    AccountEntity savaAccount(AccountEntity entity);
 
-    Account updateAccount(Account entity);
+    AccountEntity updateAccount(AccountEntity entity);
 
     void deleteAccount(Integer id);
 

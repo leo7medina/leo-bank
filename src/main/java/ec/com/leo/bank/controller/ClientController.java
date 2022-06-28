@@ -1,8 +1,9 @@
 package ec.com.leo.bank.controller;
 
 import ec.com.leo.bank.common.LeoBankUtil;
-import ec.com.leo.bank.model.Client;
+import ec.com.leo.bank.model.ClientEntity;
 import ec.com.leo.bank.service.IClientService;
+import ec.com.leo.bank.vo.ClientVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
@@ -24,33 +25,33 @@ public class ClientController {
     private IClientService clientService;
 
     @GetMapping(value = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<Client> findAll() {
+    public List<ClientEntity> findAll() {
         return clientService.findClients();
     }
 
 
     @GetMapping("/{id}")
     public ResponseEntity<?> show(@PathVariable Integer id) {
-        Client cliente = null;
+        ClientVO client = null;
         Map<String, Object> response = new HashMap<>();
         try {
-            cliente = clientService.findClientById(id);
+            client = clientService.findClientById(id);
         } catch(DataAccessException e) {
             response.put("mensaje", "El cliente ID: ".concat(id.toString().concat(" no existe en la base de datos!")));
             response.put("error", e.getMessage().concat(": ").concat(e.getMostSpecificCause().getMessage()));
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        if(cliente == null) {
+        if(client == null) {
             response.put("mensaje", "El cliente ID:".concat(id.toString().concat(" no existe en la base de datos!")));
             return new ResponseEntity<>(response,HttpStatus.OK);
         }
-        return new ResponseEntity<>(cliente,HttpStatus.OK);
+        return new ResponseEntity<>(client,HttpStatus.OK);
     }
 
 
     @PostMapping("/create")
-    public ResponseEntity<?> create(@Validated @RequestBody Client client, BindingResult result) {
-        Client clientNew = null;
+    public ResponseEntity<?> create(@Validated @RequestBody ClientVO client, BindingResult result) {
+        ClientVO clientNew = null;
         Map<String, Object> response = new HashMap<>();
         LeoBankUtil.checkErrors(result, response);
         try {
@@ -66,9 +67,9 @@ public class ClientController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(@Validated @RequestBody Client client, BindingResult result, @PathVariable Integer id) {
-        Client clientCurrent = clientService.findClientById(id);
-        Client clientUpdate = null;
+    public ResponseEntity<?> update(@Validated @RequestBody ClientVO client, BindingResult result, @PathVariable Integer id) {
+        ClientVO clientCurrent = clientService.findClientById(id);
+        ClientVO clientUpdate = null;
         Map<String,Object> response = new HashMap<>();
         LeoBankUtil.checkErrors(result, response);
         if(clientCurrent == null) {
