@@ -14,7 +14,7 @@ import java.io.Serializable;
 public class PersonEntity implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "IDPERSONA")
     private Integer idPerson;
 
@@ -27,7 +27,7 @@ public class PersonEntity implements Serializable {
     @Column(name = "EDAD")
     private Integer age;
 
-    @Column(name = "IDENTIFICACION", length = 13)
+    @Column(name = "IDENTIFICACION", length = 13, unique = true)
     private String identification;
 
     @Column(name = "DIRECCION", length = 200)

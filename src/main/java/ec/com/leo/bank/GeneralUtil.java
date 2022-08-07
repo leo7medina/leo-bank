@@ -1,5 +1,7 @@
 package ec.com.leo.bank;
 
+import ec.com.leo.bank.model.PersonEntity;
+import ec.com.leo.bank.vo.ClientVO;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.modelmapper.spi.MatchingStrategy;
@@ -34,6 +36,20 @@ public final class GeneralUtil {
         } else {
             return listData.stream().map(item -> convert(item, element)).collect(Collectors.toList());
         }
+    }
 
+    public static PersonEntity getPersonEntityOfClient(ClientVO clientVO) {
+        if (Objects.nonNull(clientVO.getIdPerson()) && Objects.nonNull(clientVO.getIdentification())) {
+            PersonEntity personEntity = new PersonEntity();
+            personEntity.setIdPerson(clientVO.getIdPerson());
+            personEntity.setAge(clientVO.getAge());
+            personEntity.setGender(clientVO.getGender());
+            personEntity.setAddress(clientVO.getAddress());
+            personEntity.setPhone(clientVO.getPhone());
+            personEntity.setName(clientVO.getName());
+            personEntity.setIdentification(clientVO.getIdentification());
+            return personEntity;
+        }
+        return null;
     }
 }

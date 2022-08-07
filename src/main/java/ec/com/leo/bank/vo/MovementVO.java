@@ -8,4 +8,5 @@ public class MovementVO {
     private String typeMovement;
     private Double value;
     private Double balance;
+    private String numberAccount;
 }

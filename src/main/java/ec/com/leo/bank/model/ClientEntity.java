@@ -18,7 +18,7 @@ import java.util.List;
 public class ClientEntity implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "IDCLIENTE")
     private Integer idClient;
 
@@ -37,5 +37,6 @@ public class ClientEntity implements Serializable {
     private PersonEntity personEntity;
 
     @OneToMany(mappedBy = "clientEntity")
+    @JsonManagedReference
     private List<AccountEntity> accountCol;
 }

@@ -1,6 +1,7 @@
 package ec.com.leo.bank.controller;
 
 import ec.com.leo.bank.common.LeoBankUtil;
+import ec.com.leo.bank.exception.ApiException;
 import ec.com.leo.bank.model.AccountEntity;
 import ec.com.leo.bank.service.IAccountService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,20 @@ public class AccountController {
 
     @Autowired
     private IAccountService accountService;
+
+    @GetMapping("/{idAccount}")
+    public ResponseEntity<?> findAccountById(@PathVariable Integer idAccount) {
+        Map<String, Object> response = new HashMap<>();
+        AccountEntity accountEntity = null;
+        try{
+            accountEntity = accountService.findAccount(idAccount);
+        } catch (DataAccessException e) {
+            response.put("mensaje", "No se encontraron cuentas existentes en la base de datos.");
+            response.put("error", e.getMessage().concat(": ").concat(e.getMostSpecificCause().getMessage()));
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return new ResponseEntity<>(accountEntity, HttpStatus.OK);
+    }
 
     @GetMapping("/client/{idClient}")
     public ResponseEntity<?> findAccountByClient(@PathVariable Integer idClient) {
@@ -46,9 +61,9 @@ public class AccountController {
             response.put("success", "La cuenta ha sido creado con éxito!");
             response.put("cuenta", accountNew);
             return new ResponseEntity<>(response, HttpStatus.CREATED);
-        }catch(DataAccessException e) {
+        }catch(ApiException e) {
             response.put("mensaje", "Error al realizar el insert en la base de datos. ");
-            response.put("error", e.getMessage().concat(": ").concat(e.getMostSpecificCause().getMessage()));
+            response.put("error", e.getMessage().concat(": ").concat(e.getMessageDefinition()));
             return new ResponseEntity<>(response,HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -67,6 +82,7 @@ public class AccountController {
         try {
             accountCurrent.setTypeAccount(account.getTypeAccount());
             accountCurrent.setBalanceInitial(account.getBalanceInitial());
+            accountCurrent.setStatus(account.getStatus());
             accountUpdate = accountService.updateAccount(accountCurrent);
         }catch(DataAccessException e) {
             response.put("mensaje", "Error al actualizar el insert en la base de datos. ");

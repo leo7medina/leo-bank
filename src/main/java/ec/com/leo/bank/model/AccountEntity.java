@@ -1,5 +1,7 @@
 package ec.com.leo.bank.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,11 +16,11 @@ import java.util.List;
 public class AccountEntity implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "IDCUENTA")
     private Integer idAccount;
 
-    @Column(name = "NUMERO", length = 20)
+    @Column(name = "NUMERO", length = 20, unique = true)
     private String number;
 
     @Column(name = "TIPOCUENTA", length = 45)
@@ -30,14 +32,16 @@ public class AccountEntity implements Serializable {
     @Column(name = "ESTADO")
     private Boolean status;
 
-    @Column(name = "IDCLIENTE")
+    @Column(name = "IDCLIENTE", nullable = false)
     private Integer idClient;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "IDCLIENTE", referencedColumnName = "IDCLIENTE", insertable = false, updatable = false)
+    @JsonBackReference
     private ClientEntity clientEntity;
 
     @OneToMany(mappedBy = "accountEntity")
+    @JsonManagedReference
     private List<MovementEntity> movementsCol;
 
 }

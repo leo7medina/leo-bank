@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/api/clientes")
@@ -77,15 +78,11 @@ public class ClientController {
                     .concat(id.toString().concat(" no existe en la base de datos!")));
             return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
         }
+        client.setIdClient(clientCurrent.getIdClient());
+        client.setIdPerson(clientCurrent.getIdPerson());
         try {
-            /*clientCurrent.setName(client.getName());
-            clientCurrent.setGender(client.getGender());
-            clientCurrent.setAge(client.getAge());
-            //clientCurrent.setIdentification(client.getIdentification());
-            clientCurrent.setAddress(client.getAddress());
-            clientCurrent.setPhone(client.getPhone());*/
-            clientCurrent.setPassword(client.getPassword());
-            clientUpdate = clientService.saveClient(clientCurrent);
+            clientService.updateClient(client);
+            clientUpdate = clientService.findClientById(id);
         }catch(DataAccessException e) {
             response.put("mensaje", "Error al actualizar el insert en la base de datos. ");
             response.put("error", e.getMessage().concat(": ").concat(e.getMostSpecificCause().getMessage()));
