@@ -12,6 +12,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -52,7 +53,7 @@ public class AccountController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<?> create(@Validated @RequestBody AccountEntity account, BindingResult result) {
+    public ResponseEntity<?> create(@Valid @RequestBody AccountEntity account, BindingResult result) {
         AccountEntity accountNew = null;
         Map<String, Object> response = new HashMap<>();
         LeoBankUtil.checkErrors(result, response);
@@ -63,7 +64,7 @@ public class AccountController {
             return new ResponseEntity<>(response, HttpStatus.CREATED);
         }catch(ApiException e) {
             response.put("mensaje", "Error al realizar el insert en la base de datos. ");
-            response.put("error", e.getMessage().concat(": ").concat(e.getMessageDefinition()));
+            response.put("error", e.getMessage());
             return new ResponseEntity<>(response,HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -84,9 +85,9 @@ public class AccountController {
             accountCurrent.setBalanceInitial(account.getBalanceInitial());
             accountCurrent.setStatus(account.getStatus());
             accountUpdate = accountService.updateAccount(accountCurrent);
-        }catch(DataAccessException e) {
+        }catch(ApiException e) {
             response.put("mensaje", "Error al actualizar el insert en la base de datos. ");
-            response.put("error", e.getMessage().concat(": ").concat(e.getMostSpecificCause().getMessage()));
+            response.put("error", e.getMessage());
             return new ResponseEntity<>(response,HttpStatus.INTERNAL_SERVER_ERROR);
         }
         response.put("mensaje", "La cuenta ha sido actualizada con éxito!");
@@ -99,9 +100,9 @@ public class AccountController {
         Map<String, Object> response = new HashMap<>();
         try {
             accountService.deleteAccount(id);
-        }catch(DataAccessException e) {
+        }catch(ApiException e) {
             response.put("mensaje", "Error al eliminar la cuenta de la base de datos. ");
-            response.put("error", e.getMessage().concat(": ").concat(e.getMostSpecificCause().getMessage()));
+            response.put("error", e.getMessage());
             return new ResponseEntity<>(response,HttpStatus.INTERNAL_SERVER_ERROR);
         }
         response.put("success", "La cuenta ha sido eliminado con éxito!");

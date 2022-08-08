@@ -19,6 +19,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -97,9 +98,10 @@ public class ClientController {
             response.put("success", "El cliente ha sido creado con éxito!");
             response.put("cliente", clientNew);
             return new ResponseEntity<>(response,HttpStatus.CREATED);
-        }catch(DataAccessException e) {
+        }catch(ApiException e) {
+            //e.setStackTrace(null);
             response.put("mensaje", "Error al realizar el insert en la base de datos. ");
-            response.put("error", e.getMessage().concat(": ").concat(e.getMostSpecificCause().getMessage()));
+            response.put("error", e.getMessage());
             return new ResponseEntity<>(response,HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -134,9 +136,9 @@ public class ClientController {
         try {
             clientService.updateClient(client);
             clientUpdate = clientService.findClientById(id);
-        }catch(DataAccessException e) {
+        }catch(ApiException e) {
             response.put("mensaje", "Error al actualizar el insert en la base de datos. ");
-            response.put("error", e.getMessage().concat(": ").concat(e.getMostSpecificCause().getMessage()));
+            response.put("error", e.getMessage());
             return new ResponseEntity<>(response,HttpStatus.INTERNAL_SERVER_ERROR);
         }
         response.put("mensaje", "El cliente ha sido actualizado con éxito!");
@@ -161,9 +163,9 @@ public class ClientController {
         Map<String, Object> response = new HashMap<>();
         try {
             clientService.deleteClient(id);
-        }catch(DataAccessException e) {
+        }catch(ApiException e) {
             response.put("mensaje", "Error al eliminar el cliente de la base de datos. ");
-            response.put("error", e.getMessage().concat(": ").concat(e.getMostSpecificCause().getMessage()));
+            response.put("error", e.getMessage());
             return new ResponseEntity<>(response,HttpStatus.INTERNAL_SERVER_ERROR);
         }
         response.put("success", "El cliente ha sido eliminado con éxito!");

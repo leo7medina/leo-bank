@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.List;
@@ -20,18 +21,23 @@ public class AccountEntity implements Serializable {
     @Column(name = "IDCUENTA")
     private Integer idAccount;
 
+    @NotNull(message = "Numero de cuenta no puede ser nulo")
     @Column(name = "NUMERO", length = 20, unique = true)
     private String number;
 
+    @NotNull
     @Column(name = "TIPOCUENTA", length = 45)
     private String typeAccount;
 
+    @NotNull
     @Column(name = "SALDOINICIAL")
     private BigDecimal balanceInitial;
 
+    @NotNull
     @Column(name = "ESTADO")
     private Boolean status;
 
+    @NotNull
     @Column(name = "IDCLIENTE", nullable = false)
     private Integer idClient;
 

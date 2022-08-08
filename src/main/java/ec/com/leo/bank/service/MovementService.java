@@ -8,11 +8,13 @@ import ec.com.leo.bank.repository.IAccountRepository;
 import ec.com.leo.bank.repository.IMovementsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
+@Transactional
 @Service
 public class MovementService implements IMovementService {
 
@@ -37,12 +39,17 @@ public class MovementService implements IMovementService {
         Double saldo = 0D;
 
         List<MovementEntity> movFound = movementsRepository.findByIdAccount(entity.getIdAccount());
-        if (Objects.isNull(movFound)) {
+        if (Objects.isNull(movFound) || movFound.size() == 0) {
             AccountEntity accountEntityFound = accountRepository.findById(entity.getIdAccount()).orElse(new AccountEntity());
             saldo = accountEntityFound.getBalanceInitial().doubleValue();
         } else {
             //ultimos saldo disponible
-            MovementEntity movementLast = movementsRepository.findLastByIdAccount(entity.getIdAccount());
+            Integer idMovementLast = movementsRepository.findMaxByIdAccount(entity.getIdAccount());
+            MovementEntity movementLast = movementsRepository.findById(idMovementLast).orElse(null);
+            if (movementLast == null ) {
+                throw new ApiException("Error consultando los movimientos");
+            }
+            //MovementEntity movementLast = movementsRepository.findLastByIdAccount(entity.getIdAccount());
             saldo = movementLast.getBalance();
         }
 
@@ -64,5 +71,10 @@ public class MovementService implements IMovementService {
     @Override
     public void deleteMovement(Integer id) {
         movementsRepository.deleteById(id);
+    }
+
+
+    public void findByClientAndDate(Integer idClient, Date startDate, Date endDate) {
+
     }
 }

@@ -1,6 +1,7 @@
 package ec.com.leo.bank.service;
 
 import ec.com.leo.bank.GeneralUtil;
+import ec.com.leo.bank.exception.ApiException;
 import ec.com.leo.bank.mapper.ClientMapper;
 import ec.com.leo.bank.model.ClientEntity;
 import ec.com.leo.bank.model.PersonEntity;
@@ -47,7 +48,7 @@ public class ClientService implements IClientService {
 
         PersonEntity personEntity = personRepository.findByIdentification(clientVO.getIdentification());
         if (Objects.nonNull(personEntity)) {
-            throw new RuntimeException("Identificacion ya existe");
+            throw new ApiException("Identificacion ya existe");
         }
 
         PersonEntity personEntityNew = personRepository.save(clientEntity.getPersonEntity());
