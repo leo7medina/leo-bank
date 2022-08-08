@@ -12,4 +12,7 @@ public interface IMovementsRepository extends JpaRepository<MovementEntity, Inte
 
     @Query("SELECT  m from MOVIMIENTO m where m.idAccount = ?1")
     List<MovementEntity> findByIdAccount(Integer idAccount);
+
+    @Query(value = "SELECT TOP 1 m from MOVIMIENTO m where m.idAccount = ?1 ORDER BY m.idMovement desc", nativeQuery = true )
+    MovementEntity findLastByIdAccount(Integer idAccount);
 }
