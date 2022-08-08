@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * ClientVO.
  * @author leonardo
@@ -17,6 +19,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class ClientVO extends PersonVO{
     private Integer idClient;
+    @NotNull
     private String password;
     private Boolean status;
 }

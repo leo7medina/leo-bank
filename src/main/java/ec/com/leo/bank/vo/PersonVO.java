@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * PersonVO.
  * @author leonardo
@@ -17,10 +19,14 @@ import lombok.Setter;
 @NoArgsConstructor
 public class PersonVO {
     private Integer idPerson;
+    @NotNull
     private String name;
+    @NotNull
     private String gender;
     private Integer age;
+    @NotNull
     private String identification;
     private String address;
     private String phone;
 }
+

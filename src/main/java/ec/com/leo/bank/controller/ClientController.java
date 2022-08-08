@@ -1,9 +1,15 @@
 package ec.com.leo.bank.controller;
 
 import ec.com.leo.bank.common.LeoBankUtil;
+import ec.com.leo.bank.exception.ApiException;
 import ec.com.leo.bank.model.ClientEntity;
 import ec.com.leo.bank.service.IClientService;
 import ec.com.leo.bank.vo.ClientVO;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
@@ -16,7 +22,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 @RestController
 @RequestMapping("/api/clientes")
@@ -25,21 +30,41 @@ public class ClientController {
     @Autowired
     private IClientService clientService;
 
+    /**
+     * Get all clients active.
+     * @return List Client
+     */
+    @Operation(summary = "Obtener todos los clientes activos")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Clientes encontrados",
+                    content = { @Content(mediaType = "application/json", schema = @Schema(implementation = ClientVO.class)) }),
+            })
     @GetMapping(value = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<ClientEntity> findAll() {
         return clientService.findClients();
     }
 
 
+    /**
+     * Get client by id.
+     * @param id Integer
+     * @return ClientVO
+     */
+    @Operation(summary = "Obtener cliente por su id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Found the client",
+                    content = { @Content(mediaType = "application/json", schema = @Schema(implementation = ClientVO.class)) }),
+            @ApiResponse(responseCode = "400", description = "Invalid id supplied", content = @Content),
+            @ApiResponse(responseCode = "404", description = "Client not found", content = @Content) })
     @GetMapping("/{id}")
     public ResponseEntity<?> show(@PathVariable Integer id) {
         ClientVO client = null;
         Map<String, Object> response = new HashMap<>();
         try {
             client = clientService.findClientById(id);
-        } catch(DataAccessException e) {
+        } catch(ApiException e) {
             response.put("mensaje", "El cliente ID: ".concat(id.toString().concat(" no existe en la base de datos!")));
-            response.put("error", e.getMessage().concat(": ").concat(e.getMostSpecificCause().getMessage()));
+            response.put("error", e.getMessage());
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
         if(client == null) {
@@ -50,6 +75,18 @@ public class ClientController {
     }
 
 
+    /**
+     * Create client.
+     * @param client ClientVO
+     * @param result BindingResult
+     * @return
+     */
+    @Operation(summary = "Permite la creacion de un nuevo cliente")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Cliente creado",
+                    content = { @Content(mediaType = "application/json", schema = @Schema(implementation = ClientVO.class)) }),
+            @ApiResponse(responseCode = "500", description = "Error interno", content = @Content),
+    })
     @PostMapping("/create")
     public ResponseEntity<?> create(@Validated @RequestBody ClientVO client, BindingResult result) {
         ClientVO clientNew = null;
@@ -67,6 +104,20 @@ public class ClientController {
         }
     }
 
+    /**
+     *
+     * @param client
+     * @param result
+     * @param id
+     * @return
+     */
+    @Operation(summary = "Permite la actualizacion de un cliente")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Cliente actualizado",
+                    content = { @Content(mediaType = "application/json", schema = @Schema(implementation = Map.class)) }),
+            @ApiResponse(responseCode = "500", description = "Error interno", content = @Content),
+            @ApiResponse(responseCode = "404", description = "Not found", content = @Content),
+    })
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@Validated @RequestBody ClientVO client, BindingResult result, @PathVariable Integer id) {
         ClientVO clientCurrent = clientService.findClientById(id);
@@ -93,6 +144,18 @@ public class ClientController {
         return new ResponseEntity<>(response,HttpStatus.OK);
     }
 
+    /**
+     * Delete clietn.
+     * @param id Integer
+     * @return Map
+     */
+    @Operation(summary = "Permite la eliminacion de un cliente")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Cliente emilinado",
+                    content = { @Content(mediaType = "application/json", schema = @Schema(implementation = Map.class)) }),
+            @ApiResponse(responseCode = "500", description = "Error interno", content = @Content),
+            @ApiResponse(responseCode = "404", description = "Not found", content = @Content),
+    })
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable Integer id) {
         Map<String, Object> response = new HashMap<>();
